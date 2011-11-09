@@ -7,9 +7,9 @@
     <owners>Mike Jansen</owners>
     <description>Very basic JIRA REST support in .NET</description>
     <language>en-US</language>
-    <projectUrl></projectUrl>
-    <licenseUrl></licenseUrl>
-    <iconUrl></iconUrl>
+    <projectUrl>https://bitbucket.org/MikeJansen/jirarestclient.net/wiki/Home</projectUrl>
+    <licenseUrl>https://bitbucket.org/MikeJansen/jirarestclient.net/wiki/License</licenseUrl>
+    <iconUrl>http://i1122.photobucket.com/albums/l521/MikeJansen/jira-rest.png</iconUrl>
     <dependencies>
       <dependency id="Newtonsoft.Json" />
       <dependency id="RestSharp" />
