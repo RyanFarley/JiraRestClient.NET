@@ -31,8 +31,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommonFramework">
+      <HintPath>..\packages\CommonFramework.0.2\lib\net40\CommonFramework.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject">
+      <HintPath>..\packages\Ninject.2.2.1.4\lib\net40-Full\Ninject.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp">
       <HintPath>..\packages\RestSharp.102.3\lib\net35\RestSharp.dll</HintPath>
@@ -46,7 +52,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Container\NinjectBootstrap.cs" />
+    <Compile Include="Container\NinjectContainerManager.cs" />
+    <Compile Include="Container\NinjectLocalModule.cs" />
+    <Compile Include="IJiraIssue.cs" />
+    <Compile Include="IJiraIssueType.cs" />
+    <Compile Include="IJiraObjectBase.cs" />
+    <Compile Include="IJiraRestClient.cs" />
+    <Compile Include="IJiraRestResponse.cs" />
     <Compile Include="JiraIssue.cs" />
+    <Compile Include="JiraIssueType.cs" />
+    <Compile Include="JiraObjectBase.cs" />
     <Compile Include="JiraRestClient.cs" />
     <Compile Include="JiraRestResponse.cs" />
     <Compile Include="JsonWrapper.cs" />
@@ -57,6 +73,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

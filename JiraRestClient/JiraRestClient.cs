@@ -2,7 +2,7 @@
 
 namespace JiraRestClient
 {
-    public class JiraRestClient
+    public class JiraRestClient : IJiraRestClient
     {
         #region Private Fields
 
@@ -48,20 +48,22 @@ namespace JiraRestClient
 
         #endregion
 
+        #region Public Methods
+
         /// <summary>
         /// GET a REST resource
         /// </summary>
         /// <param name="resource">The resource to GET specified as a relative URL off the REST API, e.g. "issue/JRA-10000"</param>
         /// <returns>The REST response</returns>
-        public JiraRestResponse Get(string resource)
+        public IJiraRestResponse Get(string resource)
         {
             RestRequest request = new RestRequest
                 {
                     Method = Method.GET,
-                    Resource = resource
+                    Resource = CleanResource(resource)
                 };
             RestResponse response = _restClient.Execute(request);
-            JiraRestResponse jiraResponse = new JiraRestResponse(this, response);
+            IJiraRestResponse jiraResponse = new JiraRestResponse(this, response);
             return jiraResponse;
         }
 
@@ -70,10 +72,54 @@ namespace JiraRestClient
         /// </summary>
         /// <param name="issueKey">The issue key, e.g. "JRA-10000"</param>
         /// <returns>A read-only JiraIssue</returns>
-        public JiraIssue GetIssue(string issueKey)
+        public IJiraIssue GetIssue(string issueKey)
         {
             return new JiraIssue(Get("issue/" + issueKey));
         }
-        
+
+        /// <summary>
+        /// GET a JIRA issue type
+        /// </summary>
+        /// <param name="id">The ID of the issue type</param>
+        /// <returns>A read-only JiraIssueType</returns>
+        public IJiraIssueType GetIssueType(int id)
+        {
+            return new JiraIssueType(Get("issueType/" + id));
+        }
+
+        /// <summary>
+        /// GET a JIRA issue type by the resource URL (either relative or absolute)
+        /// </summary>
+        /// <param name="resource">The REST resource of the issue type</param>
+        /// <returns>A read-only JiraIssueType</returns>
+        public IJiraIssueType GetIssueTypeByResource(string resource)
+        {
+            return new JiraIssueType(Get(resource));
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Cleans the REST resource to be relative to the Base URL
+        /// </summary>
+        /// <param name="resource">The resource to be cleaned</param>
+        /// <returns>The cleaned resource</returns>
+        private string CleanResource(string resource)
+        {
+            // TODO: Validate the resource for absolute URL that is not part of _baseUrl
+
+            // If being past in a "self" or full reference, strip the initial part off
+            if (resource.StartsWith(_baseUrl))
+            {
+                resource = resource.Substring(_baseUrl.Length);
+            }
+
+            return resource;
+        }
+
+        #endregion
+
     }
 }

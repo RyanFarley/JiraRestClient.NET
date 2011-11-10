@@ -6,40 +6,38 @@ namespace JiraRestClient
     /// A read-only wrapper around the JSON data returned for a JIRA issue
     /// </summary>
     /// <remarks>
+    /// <para>
     /// This class can be easily expanded to provide more fields by examining the JSON results of an issue query
     /// and following the patterns in the other properties below.
+    /// </para>
+    /// <para>
+    /// To view JSON output from the JIRA REST API, you can conveniently do the following for any REST request:
+    /// </para>
+    /// <para>
+    /// If you have an account at http://jira.atlassian.com, log in from a browser and then in the same browser use
+    /// a URL similar to the following to get the JSON.
+    /// </para>
+    /// <para>
+    /// https://jira.atlassian.com/rest/api/latest/issue/JRA-9
+    /// </para>
+    /// <para>
+    /// If you have Chrome and the JSON Formatter extension (https://chrome.google.com/webstore/detail/bcjindcccaagfpapjjmafapmmgkkhgoa)
+    /// or something similar, it makes viewing the JSON much better.
+    /// </para>
     /// </remarks>
-    public class JiraIssue: JsonWrapper
+    public class JiraIssue: JiraObjectBase, IJiraIssue
     {
-        #region Private Fields
-
-        /// <summary>
-        /// The JiraRestClient used in the original request; used to make subsequent calls
-        /// </summary>
-        private readonly JiraRestClient _client;
-
-        #endregion
-
         #region Constructors
 
         /// <summary>
         /// Construct a JiraIssue from a JiraRestResponse
         /// </summary>
         /// <param name="jiraResponse">The REST response</param>
-        public JiraIssue(JiraRestResponse jiraResponse) : base(jiraResponse.JObject)
-        {
-            JiraResponse = jiraResponse;
-            _client = JiraResponse.JiraRestClient;
-        }
+        public JiraIssue(IJiraRestResponse jiraResponse) : base(jiraResponse) { }
 
         #endregion
 
         #region Public Properties
-
-        /// <summary>
-        /// The underlying REST response that makes up this issue
-        /// </summary>
-        public JiraRestResponse JiraResponse { get; private set; }
 
         /// <summary>
         /// The issue key
@@ -64,12 +62,29 @@ namespace JiraRestClient
         /// <summary>
         /// The JiraIssue object of the parent issue
         /// </summary>
-        public JiraIssue ParentObject { get { return Get("ParentObject", () => _client.GetIssue(Parent)); } }
+        public IJiraIssue ParentObject { get { return Get("ParentObject", () => JiraRestClient.GetIssue(Parent)); } }
 
         /// <summary>
         /// Is this issue a sub-task?
         /// </summary>
         public bool IsSubtask { get { return Get<bool>("IsSubTask", "fields", "issuetype", "value", "subtask"); } }
+
+        /// <summary>
+        /// The issue type
+        /// </summary>
+        public string IssueType { get { return Get<string>("IssueType", "fields", "issuetype", "value", "name"); } }
+
+        /// <summary>
+        /// The JiraIssueType object of the issue
+        /// </summary>
+        public IJiraIssueType IssueTypeObject 
+        {
+            get 
+            {
+                string issueTypeSelf = Get<string>("IssueTypeSelf", "fields", "issuetype", "value", "self");
+                return Get("IssueTypeObject", () => JiraRestClient.GetIssueTypeByResource(issueTypeSelf)); 
+            } 
+        }
 
         #endregion
     }

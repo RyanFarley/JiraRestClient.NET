@@ -11,9 +11,9 @@ namespace JiraRestClient.UnitTest
         [Test]
         public void OneTest()
         {
-            JiraRestClient client = new JiraRestClient("http://jira.atlassian.com", "jirarestclientnet", "jirarestclientnet");
+            IJiraRestClient client = new JiraRestClient("https://jira.atlassian.com", "jirarestclientnet", "jirarestclientnet");
 
-            JiraIssue issue = client.GetIssue("JRA-25592");
+            IJiraIssue issue = client.GetIssue("JRA-25592");
 
             Assert.AreEqual("JRA-25592", issue.Key);
             Assert.IsFalse(issue.IsSubtask);
@@ -22,6 +22,9 @@ namespace JiraRestClient.UnitTest
             IEnumerable<string> actualLabels = from label in issue.Labels orderby label select label;
 
             CollectionAssert.AreEqual(expectedLabels, actualLabels);
+
+            Assert.AreEqual("Bug", issue.IssueType);
+            Assert.AreEqual("Bug", issue.IssueTypeObject.Name);
         }
     }
 }

@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>JiraRestClient</id>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
     <authors>Mike Jansen</authors>
     <owners>Mike Jansen</owners>
     <description>Very basic JIRA REST support in .NET</description>
@@ -13,6 +13,8 @@
     <dependencies>
       <dependency id="Newtonsoft.Json" />
       <dependency id="RestSharp" />
+      <dependency id="CommonFramework" />
+      <dependency id="Ninject" />
     </dependencies>
     <tags>REST HTTP API JSON XML JIRA ATLASSIAN</tags>
   </metadata>
